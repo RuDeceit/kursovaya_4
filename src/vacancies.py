@@ -1,27 +1,47 @@
-from abc import ABC, abstractmethod
+class Vacancy:
 
+    """Класс для работы с вакансиями"""
 
-class Api(ABC):
+    def __init__(self, name, salary, url, responsibility, requirement='Информация отсутствует'):
+        self.name = name
+        self.salary = salary if salary else "Не указано"
+        self.url = url
+        self.responsibility = responsibility
+        self.requirement = requirement
 
-    """Абстрактный класс для работы с API сервиса с вакансиями"""
+    def validate_salary(self):
+        if self.salary == 0:
+            self.salary = 'Зарплата не указана'
+            return self.salary
 
-    @abstractmethod
-    def get_vacancies(self, *args, **kwargs):
-        pass
+    def __repr__(self):
 
+        """Строковое представление объекта класса Vacancy"""
 
-class AbstractJson(ABC):
+        return (f'Название вакансии: {self.name}\n'
+                f'Зарплата: {self.salary}\n'
+                f'Описание: {self.responsibility}\n'
+                f'Требования: {self.requirement}\n'
+                f'Ссылка на вакансию: <{self.url}>\n')
 
-    """Абстрактный класс для работы с json файлом"""
+    def __gt__(self, other):
 
-    @abstractmethod
-    def save_vacancies(self, *args):
-        pass
+        """Метод сравнения вакансий между собой по зарплате и валидации данных по зарплате"""
 
-    @abstractmethod
-    def get_data(self, *args):
-        pass
+        if self.salary is not None and other.salary is not None:
+            if self.salary['to'] > other.salary['to']:
+                return self
+            else:
+                return other
+        return 'Зарплата не указана'
 
-    @abstractmethod
-    def delete_vacancy(self):
-        pass
+    def __lt__(self, other):
+
+        """Метод сравнения вакансий между собой по зарплате и валидации данных по зарплате"""
+
+        if self.salary is not None and other.salary is not None:
+            if self.salary['to'] < other.salary['to']:
+                return self
+            else:
+                return other
+        return 'Зарплата не указана'

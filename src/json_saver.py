@@ -1,27 +1,41 @@
-from abc import ABC, abstractmethod
+from src.abstract_classes import AbstractJson
+import json
 
 
-class Api(ABC):
+class JsonSaver(AbstractJson):
 
-    """Абстрактный класс для работы с API сервиса с вакансиями"""
+    """Класс сохранения вакансий в файл"""
 
-    @abstractmethod
-    def get_vacancies(self, *args, **kwargs):
-        pass
+    def __init__(self, file_path="vacancies.json"):
+        self.file_path = file_path
 
+    def save_vacancies(self, vacancies):
 
-class AbstractJson(ABC):
+        """Метод для записи списка вакансий в файл"""
+        with open(self.file_path, "w", encoding="utf8") as f:
+            vacancies_json = json.dumps(vacancies, ensure_ascii=False)
+            f.write(vacancies_json)
 
-    """Абстрактный класс для работы с json файлом"""
+    def get_data(self, criterion):
 
-    @abstractmethod
-    def save_vacancies(self, *args):
-        pass
+        """Метод получения данных из файла по указанным критериям"""
 
-    @abstractmethod
-    def get_data(self, *args):
-        pass
+        with open(self.file_path, "r", encoding="utf8") as f:
+            vacancies = json.load(f)
+            criterion_vac = []
+            for vac in vacancies:
+                if not vac["snippet"]["requirement"]:  # требования
+                    continue
+                else:
+                    if criterion in vac["snippet"]["requirement"]:
+                        criterion_vac.append(vac)
+        return criterion_vac
 
-    @abstractmethod
     def delete_vacancy(self):
-        pass
+
+        """Метод удаления данных из файла"""
+
+        list_vacancies_del = []
+        list_ = json.dumps(list_vacancies_del, ensure_ascii=False)
+        with open(self.file_path, "w", encoding="utf8") as f:
+            f.write(list_)
